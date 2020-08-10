@@ -393,6 +393,38 @@ def upload_blob_and_create_sas(
 
     return sas_url
 
+def create_sas_url(block_blob_client, container_name, blob_name, file_name, expiry,
+        timeout=None):
+
+    """Takes an existing file and creates a SAS URL for it
+
+    :param block_blob_client: The storage block blob client to use.
+    :type block_blob_client: `azure.storage.blob.BlockBlobService`
+    :param str container_name: The name of the container to upload the blob to.
+    :param str blob_name: The name of the blob to upload the local file to.
+    :param str file_name: The name of the local file to upload.
+    :param expiry: The SAS expiry time.
+    :type expiry: `datetime.datetime`
+    :param int timeout: timeout in minutes from now for expiry,
+        will only be used if expiry is not specified
+    :return: A SAS URL to the blob with the specified expiry time.
+    :rtype: str
+    """
+    sas_token = create_sas_token(
+        block_blob_client,
+        container_name,
+        blob_name,
+        permission=azureblob.BlobPermissions.READ,
+        expiry=expiry,
+        timeout=timeout)
+
+    sas_url = block_blob_client.make_blob_url(
+        container_name,
+        blob_name,
+        sas_token=sas_token)
+
+    return sas_url
+
 
 def upload_file_to_container(
         block_blob_client, container_name, file_path, timeout):
@@ -453,8 +485,8 @@ def generate_unique_resource_name(resource_prefix):
     :return: A string with the format "resource_prefix-<time>".
     :rtype: str
     """
-    return resource_prefix + "-" + \
-        datetime.datetime.utcnow().strftime("%Y%m%d-%H%M%S")
+    return resource_prefix + \
+        datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")
 
 
 def query_yes_no(question, default="yes"):
