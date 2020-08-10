@@ -251,10 +251,6 @@ if __name__ == '__main__':
     storage_account_name = global_config.get('Storage', 'storageaccountname')
     storage_account_suffix = global_config.get('Storage', 'storageaccountsuffix')
     
-    aad_client_id = global_config.get('AzureActiveDirectory', 'client_id')
-    aad_client_secret = global_config.get('AzureActiveDirectory', 'client_secret')
-    aad_tenant_id = global_config.get('AzureActiveDirectory', 'tenant_id')
-
     should_delete_container = sample_config.getboolean('DEFAULT', 'shoulddeletecontainer')
     should_delete_job = sample_config.getboolean('DEFAULT', 'shoulddeletejob')
     should_delete_pool = sample_config.getboolean('DEFAULT', 'shoulddeletepool')
